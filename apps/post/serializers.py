@@ -27,7 +27,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True)
+    # comments = CommentSerializer(many=True)
+    comments_count = serializers.IntegerField(read_only=True)
     genres = GenreSerializer(many=True)
 
     class Meta:
@@ -47,14 +48,15 @@ class PostSerializer(serializers.ModelSerializer):
             "sound_card",
             "disk_space",
             "genres",
-            "comments",
+            # "comments",
+            "comments_count",
             "created_at",
             "updated_at",
         ]
 
-    def get_comments(self, obj):
-        serializer = CommentSerializer(obj.comments.all(), many=True)
-        return serializer.data
+    # def get_comments(self, obj):
+    #     serializer = CommentSerializer(obj.comments.all(), many=True)
+    #     return serializer.data
 
     def get_genres(self, obj):
         serializer = GenreSerializer(obj.genres.all(), many=True)

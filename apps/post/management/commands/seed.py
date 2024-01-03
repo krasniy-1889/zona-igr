@@ -1,7 +1,9 @@
+import logging
+import random
 from django.contrib.auth import get_user_model
 from django.core.management import BaseCommand
-from apps.post.models import Post, Genre, GameDeveloper
-
+from apps.post.models import Post, Genre, GameDeveloper, Comment
+from cuid import cuid
 
 from dotenv import load_dotenv
 
@@ -36,38 +38,41 @@ class Command(BaseCommand):
             [GameDeveloper(**developer) for developer in developers]
         )
         # Post seed
-        posts = [
-            {
-                "title": "Skyrim",
-                "poster": "posters/poster1.jpg",
-                "developer": GameDeveloper.objects.order_by("?").first(),
-                "voiceover_language": "русский",
-                "interface_language": "русский",
-                "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                "operating_system": "XP / Vista / 7 / 8 / 10",
-                "processor": "Intel Core i5",
-                "memory": "8 GB RAM",
-                "video_card": "NVIDIA GeForce GTX 1060",
-                "sound_card": "Звуковое устройство DirectX® 9.0с",
-                "disk_space": "50 GB",
-            },
-            {
-                "title": "Fallout 4",
-                "poster": "posters/poster2.jpg",
-                "developer": GameDeveloper.objects.order_by("?").first(),
-                "voiceover_language": "english",
-                "interface_language": "english",
-                "content": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem.",
-                "operating_system": "Windows 10",
-                "processor": "AMD Ryzen 7",
-                "memory": "16 GB RAM",
-                "video_card": "AMD Radeon RX 5700",
-                "sound_card": "DirectX® compatible sound card",
-                "disk_space": "100 GB",
-            },
-        ]
+        posts = []
+        for _ in range(100):
+            posts.append(
+                {
+                    "title": f"Game - {cuid()}",
+                    "poster": "posters/poster1.jpg",
+                    "developer": GameDeveloper.objects.order_by("?").first(),
+                    "voiceover_language": "русский",
+                    "interface_language": "русский",
+                    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                    "operating_system": "XP / Vista / 7 / 8 / 10",
+                    "processor": "Intel Core i5",
+                    "memory": "8 GB RAM",
+                    "video_card": "NVIDIA GeForce GTX 1060",
+                    "sound_card": "Звуковое устройство DirectX® 9.0с",
+                    "disk_space": "50 GB",
+                },
+            )
 
         posts = Post.objects.bulk_create([Post(**post) for post in posts])
         for post in posts:
             post.genres.set(Genre.objects.order_by("?")[:4])
+            for _ in range(random.randint(20, 100)):
+                user = get_user_model().objects.first()
+                text = cuid()
+                parent = random.choice([None] + list(Comment.objects.filter(post=post)))
+
+                comment = Comment.objects.create(
+                    post=post,
+                    user=user,
+                    text=text,
+                    parent=parent,
+                )
+
+                if parent:
+                    parent.children.add(comment)
+
         self.stdout.write(self.style.SUCCESS("Database seed succes"))
