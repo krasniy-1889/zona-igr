@@ -10,10 +10,15 @@ from .models import Comment, Post
 
 
 class CommentListAPIView(ListAPIView):
-    queryset = Comment.objects.annotate(reply_count=Count("children"))
+    queryset = Comment.objects.annotate(reply_count=Count("children")).values(
+        "id",
+        "text",
+        "created_at",
+        "updated_at",
+        "reply_count",
+    )
     serializer_class = CommentSerializer
     filterset_class = CommentFilter
-    paginate_by = 20
 
 
 class PostListAPIView(ListAPIView):
@@ -21,4 +26,3 @@ class PostListAPIView(ListAPIView):
         comments_count=Count("comments")
     )
     serializer_class = PostSerializer
-    # filterset_class = CommentFilter
