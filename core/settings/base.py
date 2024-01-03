@@ -13,7 +13,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "django_filters",
+    "debug_toolbar",
+    "django_extensions",
+    "apps.api",
     "apps.user",
+    "apps.post",
 ]
 
 MIDDLEWARE = [
@@ -24,6 +28,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "core.middleware.logging_middleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -70,9 +76,18 @@ PASSWORD_HASHERS = [
 # Rest Framework
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
-    ]
+        "rest_framework.permissions.AllowAny",
+    ],
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+    ],
+    # "DEFAULT_RENDERER_CLASSES": [
+    #     "rest_framework.renderers.JSONRenderer",
+    # ],
 }
+
+# Sessions
+SESSION_ENGINE = "django.contrib.sessions.backends.file"
 
 AUTH_USER_MODEL = "user.CustomUser"
 
