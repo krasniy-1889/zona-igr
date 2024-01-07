@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .forms import CommentModelAdminForm
-from .models import GameDeveloper, Genre, Post, Comment
+from .models import Comment, GameDeveloper, Genre, Post
 
 
 @admin.register(GameDeveloper)

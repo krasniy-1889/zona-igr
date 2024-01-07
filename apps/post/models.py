@@ -1,5 +1,6 @@
 from django.db import models
 from django_extensions.db.models import AutoSlugField
+
 from rest_framework.authentication import get_user_model
 
 
@@ -31,6 +32,12 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     slug = AutoSlugField(populate_from="title")  # type: ignore
     poster = models.ImageField(upload_to="posters/")
+    likes = models.ManyToManyField(
+        get_user_model(), related_name="post_likes", blank=True
+    )
+    dislikes = models.ManyToManyField(
+        get_user_model(), related_name="post_dislikes", blank=True
+    )
     developer = models.ForeignKey("GameDeveloper", on_delete=models.CASCADE)
     voiceover_language = models.CharField(
         max_length=10,
@@ -42,6 +49,7 @@ class Post(models.Model):
         choices=LANGUAGE.choices,
         default=LANGUAGE.RU,
     )
+
     genres = models.ManyToManyField("Genre", related_name="posts")
     content = models.TextField()
 

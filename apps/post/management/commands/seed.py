@@ -1,11 +1,12 @@
 import logging
 import random
+
+from cuid import cuid
 from django.contrib.auth import get_user_model
 from django.core.management import BaseCommand
-from apps.post.models import Post, Genre, GameDeveloper, Comment
-from cuid import cuid
-
 from dotenv import load_dotenv
+
+from apps.post.models import Comment, GameDeveloper, Genre, Post
 
 load_dotenv()
 
@@ -39,7 +40,7 @@ class Command(BaseCommand):
         )
         # Post seed
         posts = []
-        for _ in range(100):
+        for _ in range(1000):
             posts.append(
                 {
                     "title": f"Game - {cuid()}",
@@ -59,6 +60,9 @@ class Command(BaseCommand):
 
         posts = Post.objects.bulk_create([Post(**post) for post in posts])
         for post in posts:
+            self.stdout.write(
+                self.style.NOTICE(f"created comments for post - {post.pk}")
+            )
             post.genres.set(Genre.objects.order_by("?")[:4])
             for _ in range(random.randint(20, 100)):
                 user = get_user_model().objects.first()

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.authentication import get_user_model
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = [
@@ -14,6 +14,4 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             "is_superuser",
             "is_staff",
             "is_active",
-            "last_login",
-            "url",
         ]

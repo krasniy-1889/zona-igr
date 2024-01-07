@@ -1,6 +1,7 @@
-from loguru import logger
-import uuid
 import time
+import uuid
+
+from loguru import logger
 
 
 def logging_middleware(get_response):

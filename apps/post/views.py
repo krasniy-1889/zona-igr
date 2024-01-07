@@ -1,28 +1,30 @@
 from django.db.models import Count
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
 
 from .filters import CommentFilter
-
-from .serializers import CommentSerializer, PostSerializer
 from .models import Comment, Post
+from .serializers import CommentSerializer, PostSerializer
 
 
 class CommentListAPIView(ListAPIView):
-    queryset = Comment.objects.annotate(reply_count=Count("children")).values(
-        "id",
-        "text",
-        "created_at",
-        "updated_at",
-        "reply_count",
+    queryset = Comment.objects.annotate(reply_count=Count("children")).select_related(
+        "user"
     )
     serializer_class = CommentSerializer
     filterset_class = CommentFilter
 
 
 class PostListAPIView(ListAPIView):
-    queryset = Post.objects.prefetch_related("genres").annotate(
-        comments_count=Count("comments")
+    queryset = (
+        Post.objects.select_related("developer")
+        .prefetch_related("genres")
+        .annotate(
+            comments_count=Count("comments"),
+            likes_count=Count("likes", distinct=True),
+            dislikes_count=Count("dislikes", distinct=True),
+        )
     )
     serializer_class = PostSerializer
+    # authentication_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]

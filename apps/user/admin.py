@@ -1,6 +1,6 @@
 from django.contrib import admin
-from rest_framework.authentication import get_user_model
 from django.contrib.auth.admin import UserAdmin
+from rest_framework.authentication import get_user_model
 
 # Register your models here.
 
