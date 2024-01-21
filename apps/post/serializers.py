@@ -1,5 +1,3 @@
-from re import M
-
 from loguru import logger
 from rest_framework import serializers, viewsets
 
@@ -17,7 +15,6 @@ class GenreSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     reply_count = serializers.IntegerField(read_only=True)
     user = UserSerializer(read_only=True)
-    # user = serializers.StringRelatedField()
 
     class Meta:
         model = Comment
@@ -49,6 +46,7 @@ class PostSerializer(serializers.ModelSerializer):
             "interface_language",
             "developer",
             "content",
+            # System requirements
             "operating_system",
             "processor",
             "memory",

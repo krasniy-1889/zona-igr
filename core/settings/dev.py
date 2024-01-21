@@ -1,20 +1,20 @@
-import os
 from pathlib import Path
-
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
+
 try:
     from .base import *
 except ImportError as e:
     print(e)
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -25,7 +25,6 @@ CORS_ORIGIN_ALLOW_ALL = DEBUG
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    # "http://localhost:5173",
 ]
 
 # DATABASES = {
@@ -59,6 +58,25 @@ LOGGING = {
     },
 }
 
+# # Logging
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "file": {
+#             "level": "DEBUG",
+#             "class": "logging.FileHandler",
+#             "filename": "sql.log",
+#         },
+#     },
+#     "loggers": {
+#         "django.db.backends": {
+#             "handlers": ["file"],
+#             "level": "DEBUG",
+#             "propagate": True,
+#         },
+#     },
+# }
 # S3 Storage
 # DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 

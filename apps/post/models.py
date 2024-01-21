@@ -1,6 +1,5 @@
 from django.db import models
 from django_extensions.db.models import AutoSlugField
-
 from rest_framework.authentication import get_user_model
 
 
@@ -30,7 +29,7 @@ class Post(models.Model):
         XBOX = "xbox", "Xbox"
 
     title = models.CharField(max_length=255)
-    slug = AutoSlugField(populate_from="title")  # type: ignore
+    slug = AutoSlugField(populate_from="title", unique=True)  # type: ignore
     poster = models.ImageField(upload_to="posters/")
     likes = models.ManyToManyField(
         get_user_model(), related_name="post_likes", blank=True
@@ -65,6 +64,7 @@ class Post(models.Model):
     )
     disk_space = models.CharField(max_length=200)
 
+    # Torrent files
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -88,3 +88,11 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         return f"{self.pk} - {self.user} - {self.post}"
+
+
+class TorrentFile(models.Model):
+    file = models.FileField(upload_to="torrents/", null=True, blank=True)
+    content = models.CharField(max_length=400)
+    post = models.ForeignKey("Post", on_delete=models.CASCADE, related_name="torrents")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

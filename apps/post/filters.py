@@ -1,6 +1,6 @@
-from django_filters import FilterSet, NumberFilter
+from django_filters import FilterSet, NumberFilter, CharFilter, MultipleChoiceFilter
 
-from .models import Comment
+from .models import Comment, Post
 
 
 class CommentFilter(FilterSet):
@@ -12,4 +12,14 @@ class CommentFilter(FilterSet):
         fields = [
             "parent_id",
             "user_id",
+        ]
+
+
+class PostFilter(FilterSet):
+    genre = CharFilter(field_name="genres__name", lookup_expr="exact")
+
+    class Meta:
+        model = Post
+        fields = [
+            "genre",
         ]

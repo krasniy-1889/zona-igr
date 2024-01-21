@@ -15,4 +15,5 @@ class Command(BaseCommand):
         email = os.environ.get("ADMIN_EMAIL", "admin@localhost")
         password = os.environ.get("ADMIN_PASSWORD", "admin")
         get_user_model().objects.create_superuser(username, email, password)
+        # UserProfile.objects.create(user=user)
         self.stdout.write(self.style.SUCCESS("Admin user created successfully!"))
