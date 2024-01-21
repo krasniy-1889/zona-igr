@@ -7,9 +7,11 @@ const router = createRouter({
   routes: routes,
 });
 
+const DEFAULT_TITLE = 'Zona Igr';
+
 router.beforeEach((to, from, next) => {
   const token = getCookie('token');
-
+  document.title = to.meta.title || DEFAULT_TITLE;
   if (!token && to.meta.auth) {
     next({ name: 'login', params: { nextUrl: to.fullPath } });
   } else if (token && to.meta.guest) {

@@ -4,5 +4,7 @@ export const useUserStore = defineStore('users', {
   state: () => ({
     user: {},
   }),
-  actions: {},
+  actions: {
+    async getQueryProfile(id: number) {},
+  },
 });

@@ -1,58 +1,44 @@
 import { getPageFromUrl } from '@/utils/helpers';
 import axios from 'axios';
 import { defineStore } from 'pinia';
-
-export interface IPost {
-  id: number;
-  title: string;
-  slug: string;
-  poster: string;
-  voiceover_language: string;
-  interface_language: string;
-  developer: number;
-  content: string;
-  operating_system: string;
-  processor: string;
-  memory: string;
-  video_card: string;
-  sound_card: string;
-  disk_space: string;
-  likes_count: number;
-  dislikes_count: number;
-  created_at: string;
-  updated_at: string;
-  comments_count: number;
-  genres: IGenre[];
-}
-
-export interface IGenre {
-  id: number;
-  name: string;
-}
-
-export interface IPagination {
-  nextPage: string | null;
-  previousPage: string | null;
-}
+import type { IGenre, IPagination, IPost } from '@/stores/types/post.types';
 
 export const usePostStore = defineStore('posts', {
   state: () => ({
     posts: [] as IPost[],
+    post: {} as IPost,
+    genres: [] as IGenre[],
     error: false as boolean,
     pagination: {
       nextPage: '1',
     } as IPagination,
   }),
   actions: {
-    async getQueryPosts() {
+    async getQueryPosts(genre?: string) {
       if (!this.pagination.nextPage) {
         this.error = true;
         return;
       }
-      const { data } = await axios.get('/posts?page=' + this.pagination.nextPage);
+
+      const params = {} as any;
+      params.page = this.pagination.nextPage;
+
+      if (genre) {
+        params.genre = genre;
+      }
+
+      const { data } = await axios.get('/posts', { params });
       const { results, next } = data;
       this.pagination.nextPage = getPageFromUrl(next) ?? null;
       this.posts.push(...results);
+    },
+    async getQueryPostBySlug(slug: string) {
+      const { data } = await axios.get(`/posts/${slug}`);
+      this.post = data;
+    },
+    async getQueryGenres() {
+      const { data } = await axios.get('/genres/');
+      this.genres = data.results;
     },
   },
   getters: {

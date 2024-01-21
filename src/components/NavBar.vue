@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useAuthStore, type IUser } from '@/stores';
+import { useAuthStore } from '@/stores';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 
@@ -15,7 +15,7 @@ const logout = async () => {
 
 <template>
   <header>
-    <nav class="navbar navbar-expand-lg bg-light">
+    <nav class="navbar navbar-expand-sm bg-light">
       <div class="container-fluid">
         <router-link class="navbar-brand" :to="{ name: 'home' }">Zona Igr</router-link>
         <button
@@ -30,14 +30,11 @@ const logout = async () => {
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul class="navbar-nav me-auto">
             <li class="nav-item">
               <router-link :to="{ name: 'posts' }" class="nav-link active" aria-current="page" href="#"
                 >Posts</router-link
               >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
             </li>
             <li class="nav-item dropdown">
               <a
@@ -51,8 +48,8 @@ const logout = async () => {
               </a>
               <ul class="dropdown-menu">
                 <div v-if="!isAuth">
-                  <li><a class="dropdown-item" href="#">Login</a></li>
-                  <li><a class="dropdown-item" href="#">Register</a></li>
+                  <li><router-link :to="{ name: 'login' }" class="dropdown-item">Login</router-link></li>
+                  <li><router-link :to="{ name: 'register' }" class="dropdown-item">Register</router-link></li>
                 </div>
                 <div v-if="isAuth">
                   <form @submit.prevent="logout">
@@ -60,9 +57,6 @@ const logout = async () => {
                   </form>
                 </div>
               </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled">Disabled</a>
             </li>
           </ul>
           <form class="d-flex" role="search">
@@ -76,4 +70,3 @@ const logout = async () => {
 </template>
 
 <style lang="scss"></style>
-@/helpers/auth

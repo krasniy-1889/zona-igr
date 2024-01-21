@@ -6,11 +6,12 @@ import { useRouter } from 'vue-router';
 const store = useAuthStore();
 const router = useRouter();
 const username = ref<string>('');
+const email = ref<string>('');
 const password = ref<string>('');
 
-const login = async () => {
-  await store.login(username.value, password.value);
-  await router.push({ name: 'posts' });
+const register = async () => {
+  await store.register(username.value, email.value, password.value);
+  await router.push({ name: 'login' });
 };
 </script>
 
@@ -19,9 +20,9 @@ const login = async () => {
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="card mt-5">
-          <div class="card-header">Login</div>
+          <div class="card-header">Register</div>
           <div class="card-body">
-            <form @submit.prevent="login">
+            <form @submit.prevent="register">
               <div class="form-group mb-3">
                 <label for="username">Username</label>
                 <input
@@ -33,6 +34,10 @@ const login = async () => {
                 />
               </div>
               <div class="form-group mb-3">
+                <label for="username">Email</label>
+                <input v-model="email" type="email" class="form-control" id="email" placeholder="Enter your email" />
+              </div>
+              <div class="form-group mb-3">
                 <label for="password">Password</label>
                 <input
                   v-model="password"
@@ -42,7 +47,7 @@ const login = async () => {
                   placeholder="Enter your password"
                 />
               </div>
-              <button type="submit" class="btn btn-primary">Login</button>
+              <button type="submit" class="btn btn-primary">Register</button>
             </form>
           </div>
         </div>
