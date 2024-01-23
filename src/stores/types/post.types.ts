@@ -27,6 +27,6 @@ export interface IGenre {
 }
 
 export interface IPagination {
-  nextPage: string | null;
-  previousPage: string | null;
+  currentPage: number;
+  hasNextPage: boolean;
 }

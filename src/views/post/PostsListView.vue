@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { storeToRefs } from 'pinia';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { useAuthStore, usePostStore } from '@/stores';
+import { onMounted } from 'vue';
+import { usePostStore } from '@/stores';
 import Post from '@/components/Post.vue';
 import GenresList from '@/components/post/GenresList.vue';
 

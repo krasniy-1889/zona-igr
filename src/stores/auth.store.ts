@@ -1,21 +1,21 @@
-import { getToken, getUser } from '@/utils/auth';
+import { $api } from '@/api';
+import { AuthService } from '@/services/AuthService';
+import { UserService } from '@/services/UserService';
 import { removeCookie, setCookie } from '@/utils/cookies';
-import axios from 'axios';
 
 import { defineStore } from 'pinia';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    authenticationUser: getUser(),
+    authenticationUser: UserService.getUser(),
     error: null as string | null,
-    jwtToken: getToken(),
+    jwtToken: AuthService.getToken(),
   }),
-
   actions: {
     async login(username: string, password: string) {
       this.logout();
 
-      const { data: tokens, status: loginStatus } = await axios.post('/auth/token/', {
+      const { data: tokens, status: loginStatus } = await $api.post('/auth/token/', {
         username,
         password,
       });
@@ -29,7 +29,7 @@ export const useAuthStore = defineStore('auth', {
       setCookie('refresh', tokens.refresh, { expires: 60 * 60 * 24 * 30 });
       this.jwtToken = tokens.access;
 
-      const { data: user, status: getMeStatus } = await axios.get('/auth/me/');
+      const { data: user, status: getMeStatus } = await $api.get('/auth/me/');
 
       if (getMeStatus !== 200) {
         this.logout();
@@ -40,7 +40,7 @@ export const useAuthStore = defineStore('auth', {
       this.authenticationUser = user;
     },
     async register(username: string, email: string, password: string) {
-      const { data, status } = await axios.post('/auth/register/', { username, email, password });
+      const { data, status } = await $api.post('/auth/register/', { username, email, password });
       console.log(status);
     },
     logout() {
